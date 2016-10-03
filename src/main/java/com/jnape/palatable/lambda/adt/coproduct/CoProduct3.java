@@ -19,7 +19,7 @@ import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
  * @see CoProduct2
  */
 @FunctionalInterface
-public interface CoProduct3<A, B, C> extends Functor<C>, Bifunctor<B, C> {
+public interface CoProduct3<A, B, C> extends Functor<C, CoProduct3<A, B, ?>>, Bifunctor<B, C> {
 
     /**
      * Type-safe convergence requiring a match against all potential types.
