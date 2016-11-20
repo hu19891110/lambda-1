@@ -1,4 +1,4 @@
-package testsupport.applicatives;
+package testsupport.functors;
 
 import com.jnape.palatable.lambda.functor.Bifunctor;
 

@@ -1,7 +1,7 @@
 package com.jnape.palatable.lambda.functor;
 
 import org.junit.Test;
-import testsupport.applicatives.InvocationRecordingProfunctor;
+import testsupport.functors.InvocationRecordingProfunctor;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
