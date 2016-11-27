@@ -1,7 +1,7 @@
 package testsupport.traits;
 
 import com.jnape.palatable.lambda.functor.Functor;
-import com.jnape.palatable.lambda.semigroup.Present;
+import com.jnape.palatable.lambda.monoid.builtin.Present;
 import com.jnape.palatable.traitor.traits.Trait;
 
 import java.util.Optional;
@@ -15,7 +15,7 @@ public class FunctorLaws<F extends Functor> implements Trait<Functor<?, F>> {
 
     @Override
     public void test(Functor<?, F> f) {
-        new Present<String>((x, y) -> x + "\n\t - " + y)
+        Present.<String>present((x, y) -> x + "\n\t - " + y)
                 .reduceLeft(asList(testIdentity(f), testComposition(f)))
                 .ifPresent(s -> {
                     throw new AssertionError("The following Functor laws did not hold for instance of " + f.getClass() + ": \n\t - " + s);

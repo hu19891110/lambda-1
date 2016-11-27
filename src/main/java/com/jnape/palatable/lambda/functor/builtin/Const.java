@@ -14,7 +14,7 @@ import java.util.function.Function;
  * @param <A> the left parameter type, and the type of the stored value
  * @param <B> the right (phantom) parameter type
  */
-public final class Const<A, B> implements Applicative<B, Const<A, ?>>, Bifunctor<A, B> {
+public final class Const<A, B> implements Applicative<B, Const<A, ?>>, Bifunctor<A, B, Const<?, ?>> {
 
     private final A a;
 
@@ -54,13 +54,13 @@ public final class Const<A, B> implements Applicative<B, Const<A, ?>>, Bifunctor
      * Sequence the right parameter. Note that because <code>B</code> is never actually a known quantity outside of a
      * type signature, this is effectively a no-op that serves only to alter <code>Const's</code> type signature.
      *
-     * @param appFn the mapping function
      * @param <C>   the new right parameter type
+     * @param appFn the mapping function
      * @return a Const over A (the same value) and C (the new phantom parameter)
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <C> Const<A, C> sequence(Applicative<Function<? super B, ? extends C>, Const<A, ?>> appFn) {
+    public <C> Const<A, C> sequence(Applicative<? extends Function<? super B, ? extends C>, Const<A, ?>> appFn) {
         return (Const<A, C>) this;
     }
 

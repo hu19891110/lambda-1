@@ -1,9 +1,12 @@
 package com.jnape.palatable.lambda.functions;
 
-import com.jnape.palatable.lambda.functor.Functor;
+import com.jnape.palatable.lambda.functions.builtin.fn1.Constantly;
 import com.jnape.palatable.lambda.functor.Profunctor;
+import com.jnape.palatable.lambda.functor.applicative.Applicative;
 
 import java.util.function.Function;
+
+import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.constantly;
 
 /**
  * A function taking a single argument. This is the core function type that all other function types extend and
@@ -13,7 +16,7 @@ import java.util.function.Function;
  * @param <B> The result type
  */
 @FunctionalInterface
-public interface Fn1<A, B> extends Functor<B, Fn1>, Profunctor<A, B>, Function<A, B> {
+public interface Fn1<A, B> extends Applicative<B, Fn1<A, ?>>, Profunctor<A, B, Fn1<?, ?>>, Function<A, B> {
 
     /**
      * Invoke this function with the given argument.
@@ -22,6 +25,52 @@ public interface Fn1<A, B> extends Functor<B, Fn1>, Profunctor<A, B>, Function<A
      * @return the result of the function application
      */
     B apply(A a);
+
+    /**
+     * Produce an <code>Fn1</code> from any <code>A</code> to <code>c</code>.
+     *
+     * @param c   the return value
+     * @param <C> the return parameter type
+     * @return Fn1 from A to C
+     * @see Constantly
+     */
+    @Override
+    default <C> Fn1<A, C> pure(C c) {
+        return constantly(c);
+    }
+
+    /**
+     * Given an <code>Fn1&lt;A, B&gt;</code> <code>g</code> and an <code>Fn1&lt;A, Function&lt;? super B, ? extends
+     * C&gt;&gt;</code> <code>f</code>, return an <code>Fn1&lt;A, C&gt;</code>
+     * <code>a -&gt; f.apply(a, g.apply(a))</code>.
+     *
+     * @param <C>   the return parameter type
+     * @param appFn the function to apply
+     * @return Fn1 from A to C
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    default <C> Fn1<A, C> sequence(Applicative<? extends Function<? super B, ? extends C>, Fn1<A, ?>> appFn) {
+        return a -> ((Fn1<A, ? extends Function<B, C>>) appFn).apply(a).apply(this.apply(a));
+    }
+
+    default <C> Fn1<A, C> sequence(Fn1<A, Fn1<B, C>> appFn) {
+        return sequence((Applicative<? extends Function<B, C>, Fn1<A, ?>>) appFn);
+    }
+
+    default <C> Fn1<A, C> sequence(Fn2<A, B, C> appFn) {
+        return sequence((Applicative<? extends Function<B, C>, Fn1<A, ?>>) appFn);
+    }
+
+    @Override
+    default <C> Fn1<A, C> discardL(Applicative<C, Fn1<A, ?>> appB) {
+        return (Fn1<A, C>) Applicative.super.discardL(appB);
+    }
+
+    @Override
+    default <C> Fn1<A, B> discardR(Applicative<C, Fn1<A, ?>> appB) {
+        return (Fn1<A, B>) Applicative.super.discardL(appB);
+    }
 
     /**
      * Left-to-right composition, such that <code>g.then(f).apply(x)</code> is equivalent to

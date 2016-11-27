@@ -2,7 +2,7 @@ package testsupport.traits;
 
 import com.jnape.palatable.lambda.functions.builtin.fn2.Map;
 import com.jnape.palatable.lambda.functor.applicative.Applicative;
-import com.jnape.palatable.lambda.semigroup.Present;
+import com.jnape.palatable.lambda.monoid.builtin.Present;
 import com.jnape.palatable.traitor.traits.Trait;
 
 import java.util.Optional;
@@ -20,7 +20,7 @@ public class ApplicativeLaws<App extends Applicative> implements Trait<Applicati
                 f -> f.apply(applicative),
                 asList(this::testIdentity, this::testComposition, this::testHomomorphism, this::testInterchange)
         );
-        new Present<String>((x, y) -> x + "\n\t - " + y)
+        Present.<String>present((x, y) -> x + "\n\t - " + y)
                 .reduceLeft(testResults)
                 .ifPresent(s -> {
                     throw new AssertionError("The following Applicative laws did not hold for instance of " + applicative.getClass() + ": \n\t - " + s);

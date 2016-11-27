@@ -38,8 +38,9 @@ public final class Identity<A> implements Applicative<A, Identity> {
     }
 
     @Override
-    public <B> Applicative<B, Identity> sequence(Applicative<Function<? super A, ? extends B>, Identity> appFn) {
-        return new Identity<>(((Identity<Function<? super A, ? extends B>>) appFn).a.apply(a));
+    @SuppressWarnings("unchecked")
+    public <B> Identity<B> sequence(Applicative<? extends Function<? super A, ? extends B>, Identity> appFn) {
+        return new Identity<>(((Identity<? extends Function<A, B>>) appFn).a.apply(a));
     }
 
     @Override

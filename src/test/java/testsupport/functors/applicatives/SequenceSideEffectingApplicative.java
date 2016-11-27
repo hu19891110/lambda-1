@@ -19,8 +19,9 @@ public final class SequenceSideEffectingApplicative<A> implements Applicative<A,
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <B> SequenceSideEffectingApplicative<B> sequence(
-            Applicative<Function<? super A, ? extends B>, SequenceSideEffectingApplicative> appFn) {
+            Applicative<? extends Function<? super A, ? extends B>, SequenceSideEffectingApplicative> appFn) {
         sequenceIO.run();
         return new SequenceSideEffectingApplicative<>(((SequenceSideEffectingApplicative<Function<? super A, ? extends B>>) appFn).a.apply(a), sequenceIO);
     }

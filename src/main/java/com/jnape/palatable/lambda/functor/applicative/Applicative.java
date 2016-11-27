@@ -50,11 +50,11 @@ public interface Applicative<A, App extends Applicative> extends Functor<A, App>
      * Apply a function wrapped in an instance of this <code>Applicative</code> to the value wrapped in this
      * <code>Applicative</code> instance, returning an <code>Applicative</code> over the result.
      *
-     * @param appFn the function to apply
      * @param <B>   the new parameter type
+     * @param appFn the function to apply
      * @return an instance of this Applicative over the result of applying appFn to this Applicative's value
      */
-    <B> Applicative<B, App> sequence(Applicative<Function<? super A, ? extends B>, App> appFn);
+    <B> Applicative<B, App> sequence(Applicative<? extends Function<? super A, ? extends B>, App> appFn);
 
     /**
      * Sequence both this <code>Applicative</code> and <code>appB</code>, discarding this <code>Applicative's</code>
